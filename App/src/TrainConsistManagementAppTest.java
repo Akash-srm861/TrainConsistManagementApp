@@ -1,114 +1,57 @@
-import org.junit.Test;
+/**
+ * ========================================================
+ * MAIN CLASS - UseCase3TrainConsistMgmnt
+ * ========================================================
+ *
+ * Use Case 3: Track Unique Bogie IDs
+ *
+ * Description:
+ * This class ensures that duplicate bogie IDs are not
+ * added into the train formation using HashSet.
+ *
+ * At this stage, the application:
+ * - Stores bogie IDs
+ * - Prevents duplicates automatically
+ * - Displays unique bogie identifiers
+ *
+ * This maps uniqueness validation using Set.
+ *
+ * @author Developer
+ * @version 3.0
+ */
 
-import static org.junit.Assert.*;
+import java.util.HashSet;
+import java.util.Set;
 
-public class TrainConsistManagementAppTest {
+public class TrainConsistManagementApp {
 
-    // ══════════════════════════════════════════
-    // TEST 1
-    // Safe cargo assignment must succeed
-    // without any exception
-    // ══════════════════════════════════════════
-    @Test
-    public void testCargo_SafeAssignment() {
+    public static void main(String[] args) {
 
-        TrainConsistManagementApp.GoodsBogie bogie =
-                new TrainConsistManagementApp.GoodsBogie("Cylindrical");
+        System.out.println("======================================");
+        System.out.println(" UC3 - Track Unique Bogie IDs ");
+        System.out.println("======================================\n");
 
-        bogie.assignCargo("Petroleum");
+        // Create a Set to store unique bogie IDs
+        // HashSet stores only unique values
+        Set<String> bogies = new HashSet<>();
 
-        assertEquals("Cargo must be Petroleum",
-                "Petroleum", bogie.cargo);
-    }
+        // ---- ADD IDs (including duplicates) ----
+        // add() inserts bogie IDs into the set
+        bogies.add("BG101");
+        bogies.add("BG102");
+        bogies.add("BG103");
+        bogies.add("BG104");
+        // Duplicate entries will be ignored internally by HashSet
+        bogies.add("BG101"); // Duplicate entry
+        bogies.add("BG102"); // Duplicate entry
 
-    // ══════════════════════════════════════════
-    // TEST 2
-    // Petroleum on Rectangular must throw
-    // CargoSafetyException
-    // ══════════════════════════════════════════
-    @Test
-    public void testCargo_UnsafeAssignmentHandled() {
+        // ---- Display unique IDs ----
+        System.out.println("Bogie IDs After Insertion:");
+        System.out.println(bogies);
 
-        TrainConsistManagementApp.GoodsBogie bogie =
-                new TrainConsistManagementApp.GoodsBogie("Rectangular");
+        System.out.println("\nNote:");
+        System.out.println("Duplicates are automatically ignored by HashSet.");
 
-        try {
-            bogie.assignCargo("Petroleum");
-            fail("CargoSafetyException expected");
-
-        } catch (TrainConsistManagementApp.CargoSafetyException e) {
-            assertNotNull("Exception must be thrown", e);
-        }
-    }
-
-    // ══════════════════════════════════════════
-    // TEST 3
-    // Cargo must NOT be assigned after
-    // a failed unsafe assignment
-    // ══════════════════════════════════════════
-    @Test
-    public void testCargo_CargoNotAssignedAfterFailure() {
-
-        TrainConsistManagementApp.GoodsBogie bogie =
-                new TrainConsistManagementApp.GoodsBogie("Rectangular");
-
-        try {
-            bogie.assignCargo("Petroleum");
-        } catch (TrainConsistManagementApp.CargoSafetyException e) {
-            // expected
-        }
-
-        assertNull("Cargo must remain null after failed assignment",
-                bogie.cargo);
-    }
-
-    // ══════════════════════════════════════════
-    // TEST 4
-    // Program must continue running after
-    // exception is handled
-    // ══════════════════════════════════════════
-    @Test
-    public void testCargo_ProgramContinuesAfterException() {
-
-        TrainConsistManagementApp.GoodsBogie b1 =
-                new TrainConsistManagementApp.GoodsBogie("Rectangular");
-        TrainConsistManagementApp.GoodsBogie b2 =
-                new TrainConsistManagementApp.GoodsBogie("Cylindrical");
-
-        try {
-            b1.assignCargo("Petroleum"); // will throw
-        } catch (TrainConsistManagementApp.CargoSafetyException e) {
-            // handled
-        }
-
-        // b2 must still work after b1 exception
-        b2.assignCargo("Petroleum");
-        assertEquals("b2 must have Petroleum assigned",
-                "Petroleum", b2.cargo);
-    }
-
-    // ══════════════════════════════════════════
-    // TEST 5
-    // finally block must always execute
-    // regardless of success or failure
-    // ══════════════════════════════════════════
-    @Test
-    public void testCargo_FinallyBlockExecution() {
-
-        boolean[] finallyRan = {false};
-
-        TrainConsistManagementApp.GoodsBogie bogie =
-                new TrainConsistManagementApp.GoodsBogie("Rectangular");
-
-        try {
-            bogie.assignCargo("Petroleum");
-        } catch (TrainConsistManagementApp.CargoSafetyException e) {
-            // caught
-        } finally {
-            finallyRan[0] = true;
-        }
-
-        assertTrue("finally block must always execute",
-                finallyRan[0]);
+        System.out.println("\nUC3 uniqueness validation completed...");
     }
 }
